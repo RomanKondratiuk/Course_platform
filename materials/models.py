@@ -4,6 +4,7 @@ NULLABLE = {'blank': True, 'null': True}
 
 
 class Course(models.Model):
+    """Creating a model"""
     title = models.CharField(max_length=100, verbose_name='title')
     preview = models.ImageField(upload_to='course_previews/', verbose_name='preview', **NULLABLE)
     description = models.TextField(verbose_name='description')
@@ -17,10 +18,11 @@ class Course(models.Model):
 
 
 class Lesson(models.Model):
+    """Creating a model"""
     title = models.CharField(max_length=100, verbose_name='title')
     preview = models.ImageField(upload_to='lesson_previews/', verbose_name='preview', **NULLABLE)
     description = models.TextField(verbose_name='description')
-    url = models.URLField(verbose_name='url')
+    url = models.URLField(verbose_name='url', **NULLABLE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
 
     def __str__(self):
