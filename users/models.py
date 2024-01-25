@@ -13,6 +13,10 @@ class User(AbstractUser):
     avatar = models.ImageField(upload_to='avatars/', verbose_name='avatar', **NULLABLE)
     email = models.EmailField(unique=True, verbose_name='email')
 
+    # Changing authorization from username to e-mail
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
+
     def __str__(self):
         return self.email
 
