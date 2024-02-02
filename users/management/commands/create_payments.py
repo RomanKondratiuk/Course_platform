@@ -12,7 +12,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         # creating test user
-        user = User.objects.create(username='testuser2@example.com', first_name='Test2', last_name='Testov2', email='testuser2@example.com')
+        user = User.objects.create(username='roma3@example.com', first_name='Roman', last_name='Roman', email='roma3@example.com')
 
         # creating test course
         course = Course.objects.create(title='backend', description='this is the backend course')
