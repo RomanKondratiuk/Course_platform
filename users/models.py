@@ -1,11 +1,15 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.db.models import CASCADE
+
+from materials.models import Course, Lesson
 
 NULLABLE = {'blank': True, 'null': True}
 
 
 class User(AbstractUser):
-    """ This is the model for users"""
+    """ This is a users model"""
     first_name = models.CharField(max_length=50, verbose_name='first_name')
     last_name = models.CharField(max_length=50, verbose_name='last_name')
     phone = models.IntegerField(verbose_name='phone_number', **NULLABLE)
@@ -23,3 +27,34 @@ class User(AbstractUser):
     class Meta:
         verbose_name = 'user'
         verbose_name_plural = 'users'
+
+
+class Payments(models.Model):
+    """ This is a payments model"""
+
+    PAYMENT_CHOICES = [
+        ('transfer', 'transfer to account'),
+        ('cash', 'cash'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=CASCADE, verbose_name='user')
+    date_of_payment = models.DateField(verbose_name='date_of_payment')
+    paid_course = models.ForeignKey(Course, on_delete=CASCADE, **NULLABLE, verbose_name='paid course')
+    paid_lesson = models.ForeignKey(Lesson, on_delete=CASCADE, **NULLABLE, verbose_name='paid lesson')
+    payment_amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='payment_amount')
+    payment_method = models.CharField(max_length=100, choices=PAYMENT_CHOICES, verbose_name='payment_method')
+
+    def __str__(self):
+        return f"{self.user} on  {self.date_of_payment}"
+
+    class Meta:
+        verbose_name = "payment"
+        verbose_name_plural = "payments"
+
+
+
+
+
+
+
+
