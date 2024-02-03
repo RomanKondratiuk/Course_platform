@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from users.models import Payments
+from users.models import Payments, User
 
 
 class PaymentsSerializer(serializers.ModelSerializer):
@@ -9,3 +9,18 @@ class PaymentsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payments
         fields = '__all__'
+
+
+class UserSerializer(serializers.ModelSerializer):
+    """User serializer """
+
+    date_joined = serializers.DateTimeField(format="%Y-%m-%d")
+
+    history_payments = PaymentsSerializer(many=True, read_only=True, source='payments_set')
+
+    class Meta:
+        model = User
+        fields = ['id', 'first_name', 'last_name', 'email', 'date_joined', 'history_payments']
+
+    def get_history_payments(self, obj):
+        return obj.history_payments
