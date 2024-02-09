@@ -18,7 +18,7 @@ class CourseSerializer(serializers.ModelSerializer):
     lessons_count = serializers.SerializerMethodField()
 
     # creating lessons list for course
-    lessons_list = LessonSerializer(many=True, source='lessons')
+    lessons_list = LessonSerializer(many=True, source='lessons', required=False)
 
     class Meta:
         model = Course
