@@ -2,10 +2,17 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models import CASCADE
-
+from django.utils.translation import gettext_lazy as _
 from materials.models import Course, Lesson
 
 NULLABLE = {'blank': True, 'null': True}
+
+
+class UserRoles(models.TextChoices):
+    """ this is class of selection the role """
+
+    MEMBER = 'member', _('member'),
+    MODERATOR = 'moderator', _('moderator')
 
 
 class User(AbstractUser):
@@ -16,6 +23,7 @@ class User(AbstractUser):
     city = models.TextField(max_length=50, verbose_name='city', **NULLABLE)
     avatar = models.ImageField(upload_to='avatars/', verbose_name='avatar', **NULLABLE)
     email = models.EmailField(unique=True, verbose_name='email')
+    role = models.CharField(max_length=9, choices=UserRoles.choices, default=UserRoles.MEMBER)
 
     # Changing authorization from username to e-mail
     USERNAME_FIELD = 'email'
@@ -50,11 +58,3 @@ class Payments(models.Model):
     class Meta:
         verbose_name = "payment"
         verbose_name_plural = "payments"
-
-
-
-
-
-
-
-
