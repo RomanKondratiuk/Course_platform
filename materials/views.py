@@ -14,17 +14,15 @@ class CourseViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         # Checking if a user is a moderator
         is_moderator = request.user.groups.filter(name='Moderators').exists()
-        if not is_moderator:
+        if is_moderator:
             return self.permission_denied(request)
-
         return super().create(request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):
         # Checking if a user is a moderator
         is_moderator = request.user.groups.filter(name='Moderators').exists()
-        if not is_moderator:
+        if is_moderator:
             return self.permission_denied(request)
-
         return super().destroy(request, *args, **kwargs)
 
 
@@ -59,4 +57,3 @@ class LessonDestroyApiView(generics.DestroyAPIView):
     """ Deleting one lesson """
     queryset = Lesson.objects.all()
     permission_classes = [IsAuthenticated, IsOwner]
-
