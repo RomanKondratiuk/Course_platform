@@ -13,6 +13,7 @@ class Course(models.Model):
     preview = models.ImageField(upload_to='course_previews/', verbose_name='preview', **NULLABLE)
     description = models.TextField(verbose_name='description')
     owner = models.ForeignKey('users.User', on_delete=CASCADE, related_name='courses', default=None)
+    url = models.URLField(verbose_name='url', **NULLABLE)
 
     def __str__(self):
         return self.title

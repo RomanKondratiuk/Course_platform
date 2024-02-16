@@ -1,10 +1,12 @@
 from rest_framework import serializers
 
 from materials.models import Course, Lesson
+from materials.validators import validator_scam_url
 
 
 class LessonSerializer(serializers.ModelSerializer):
     """Serializer Description"""
+    url = serializers.URLField(validators=[validator_scam_url])
 
     class Meta:
         model = Lesson
@@ -19,6 +21,8 @@ class CourseSerializer(serializers.ModelSerializer):
 
     # creating lessons list for course
     lessons_list = LessonSerializer(many=True, source='lessons', required=False)
+
+    url = serializers.URLField(validators=[validator_scam_url])
 
     class Meta:
         model = Course
