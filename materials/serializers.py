@@ -6,6 +6,8 @@ from materials.validators import validator_scam_url
 
 class LessonSerializer(serializers.ModelSerializer):
     """Serializer Description"""
+
+    # validation for material reference
     url = serializers.URLField(validators=[validator_scam_url])
 
     class Meta:
@@ -22,6 +24,7 @@ class CourseSerializer(serializers.ModelSerializer):
     # creating lessons list for course
     lessons_list = LessonSerializer(many=True, source='lessons', required=False)
 
+    # validation for material reference
     url = serializers.URLField(validators=[validator_scam_url])
 
     class Meta:
