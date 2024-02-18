@@ -3,7 +3,6 @@ from django.db.models import CASCADE
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-
 NULLABLE = {'blank': True, 'null': True}
 
 
@@ -49,3 +48,12 @@ def set_lesson_owner(sender, instance, created, **kwargs):
     if created and not instance.owner:
         instance.owner = instance.course.owner
         instance.save()
+
+
+class CourseSubscription(models.Model):
+    """Subscription_to_the_course"""
+
+    course = models.ForeignKey(Course, on_delete=CASCADE)
+    user = models.ForeignKey('users.User', on_delete=CASCADE)
+    # valid_subscription = models.BooleanField(default=False)
+
