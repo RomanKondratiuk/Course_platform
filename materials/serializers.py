@@ -8,7 +8,7 @@ class LessonSerializer(serializers.ModelSerializer):
     """Serializer Description"""
 
     # validation for material reference
-    url = serializers.URLField(validators=[validator_scam_url])
+    url = serializers.URLField(validators=[validator_scam_url], read_only=True)
 
     class Meta:
         model = Lesson
@@ -27,7 +27,7 @@ class CourseSerializer(serializers.ModelSerializer):
     lessons_list = LessonSerializer(many=True, source='lessons', required=False)
 
     # validation for material reference
-    url = serializers.URLField(validators=[validator_scam_url])
+    url = serializers.URLField(validators=[validator_scam_url], read_only=True)
 
     class Meta:
         model = Course

@@ -3,6 +3,8 @@ from django.db.models import CASCADE
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+from config import settings
+
 NULLABLE = {'blank': True, 'null': True}
 
 
@@ -11,7 +13,7 @@ class Course(models.Model):
     title = models.CharField(max_length=100, verbose_name='title')
     preview = models.ImageField(upload_to='course_previews/', verbose_name='preview', **NULLABLE)
     description = models.TextField(verbose_name='description')
-    owner = models.ForeignKey('users.User', on_delete=CASCADE, related_name='courses', default=None)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, **NULLABLE, verbose_name='owner')
     url = models.URLField(verbose_name='url', **NULLABLE)
 
     def __str__(self):
