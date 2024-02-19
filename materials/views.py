@@ -68,6 +68,10 @@ class LessonDestroyApiView(generics.DestroyAPIView):
 
 
 class CourseSubscriptionAPIView(APIView):
+    """ creating a subscription to course updates """
+
+    permission_classes = [IsAuthenticated, IsOwner]
+
     def get(self, request):
         user = request.user
 
