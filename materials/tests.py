@@ -102,3 +102,28 @@ class LessonTestCase(APITestCase):
             self.lesson.description,
             updated_data['description']
         )
+
+    def test_delete_lesson(self):
+        ''' test for deleting of course'''
+
+        self.client.force_authenticate(user=self.user)
+
+        self.lesson = Lesson.objects.create(
+            title='lesson_to_delete',
+            description='lesson_to_delete description',
+            course=self.course,
+            owner=self.user
+        )
+
+        response = self.client.delete(
+            reverse('materials:lesson_delete', args=[self.lesson.id]),
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_204_NO_CONTENT
+        )
+
+        # check that the lesson has been deleted
+        with self.assertRaises(Lesson.DoesNotExist):
+            self.lesson.refresh_from_db()
