@@ -2,7 +2,7 @@ from django.urls import reverse
 from rest_framework.test import APITestCase
 from rest_framework import status
 
-from materials.models import Course
+from materials.models import Course, Lesson
 from users.models import User
 
 
@@ -26,9 +26,79 @@ class LessonTestCase(APITestCase):
             reverse('materials:lesson_list')
         )
 
-        print(response.json())
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_200_OK
+        )
+
+        self.assertEqual(
+            response.json(),
+            {'count': 0, 'next': None, 'previous': None, 'results': []}
+
+        )
+
+    def test_lesson_create(self):
+        """ testing for creating of lesson"""
+
+        self.client.force_authenticate(user=self.user)
+
+        data = {
+            'title': 'test2',
+            'description': 'this is second lesson',
+            'course': self.course.id,
+            'user': self.user.id
+        }
+
+        response = self.client.post(
+            reverse('materials:lesson_create'),
+            data=data
+        )
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_201_CREATED
+        )
+
+        self.assertEqual(
+            Lesson.objects.all().count(),
+            1
+        )
+
+    def test_lesson_update(self):
+        """ test for updating of lesson"""
+
+        self.client.force_authenticate(user=self.user)
+
+        self.lesson = Lesson.objects.create(
+            title='test_lesson',
+            description='first lesson',
+            course=self.course,
+            owner=self.user
+        )
+
+        updated_data = {
+            'title': 'updated_lesson',
+            'description': 'this is updated lesson',
+            'course': self.course.id
+        }
+
+        response = self.client.put(
+            reverse('materials:lesson_update', args=[self.lesson.id]),
+            data=updated_data
+        )
 
         self.assertEqual(
             response.status_code,
             status.HTTP_200_OK
+        )
+
+        self.lesson.refresh_from_db()
+        self.assertEqual(
+            self.lesson.title,
+            updated_data['title']
+        )
+
+        self.lesson.refresh_from_db()
+        self.assertEqual(
+            self.lesson.description,
+            updated_data['description']
         )
