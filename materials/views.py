@@ -68,35 +68,25 @@ class LessonDestroyApiView(generics.DestroyAPIView):
 
 
 class CourseSubscriptionAPIView(APIView):
-    """ creating a subscription to course updates """
+    """Creating a subscription to course updates"""
 
     permission_classes = [IsAuthenticated, IsOwner]
 
     def get(self, request):
         user = request.user
 
-        # getting all subscriptions for current user
-        subscriptions = CourseSubscription.objects.filter(user=user)
-
-        # Serializing subscriptions
-        subscription_serializer = CourseSubscriptionSerializer(subscriptions, many=True)
-
-        # getting all courses
-        courses = Course.objects.all()
-
-        # We serialize courses by passing subscriptions to the context
-        course_serializer = CourseSerializer(courses, many=True, context={'request': request})
-
-        # Returning JSON with data about courses and subscriptions
-        return Response({"courses": course_serializer.data, "subscriptions": subscription_serializer.data},
-                        status=status.HTTP_200_OK)
-
-        # Checking that the user is authenticated
         if user.is_authenticated:
             # Getting all subscriptions for the current user
             subscriptions = CourseSubscription.objects.filter(user=user)
-            serializer = CourseSubscriptionSerializer(subscriptions, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            subscription_serializer = CourseSubscriptionSerializer(subscriptions, many=True)
+
+            # Getting all courses
+            courses = Course.objects.all()
+            course_serializer = CourseSerializer(courses, many=True, context={'request': request})
+
+            # Returning JSON with data about courses and subscriptions
+            return Response({"courses": course_serializer.data, "subscriptions": subscription_serializer.data},
+                            status=status.HTTP_200_OK)
         else:
             # Return an error message if the user is not authenticated
             return Response({"message": "Authentication required"}, status=status.HTTP_401_UNAUTHORIZED)
@@ -104,19 +94,18 @@ class CourseSubscriptionAPIView(APIView):
     def post(self, request, course_id):
         user = request.user
 
-        # Checking that the user is authenticated
         if user.is_authenticated:
-            # getting the course object from the database using get_object_or_404
+            # Getting the course object from the database using get_object_or_404
             course = get_object_or_404(Course, id=course_id)
 
-            # Retrieving subscription objects by current user and rate
+            # Retrieving subscription objects by current user and course
             subscription, created = CourseSubscription.objects.get_or_create(user=user, course=course)
 
             if created:
                 message = 'Subscription has been created successfully.'
             else:
                 subscription.delete()
-                message = 'Subscription  has been deleted successfully.'
+                message = 'Subscription has been deleted successfully.'
 
             serializer = CourseSubscriptionSerializer(subscription)
             return Response({"message": message, "subscription": serializer.data}, status=status.HTTP_200_OK)
