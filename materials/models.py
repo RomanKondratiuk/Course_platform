@@ -15,6 +15,7 @@ class Course(models.Model):
     description = models.TextField(verbose_name='description')
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, **NULLABLE, verbose_name='owner')
     url = models.URLField(verbose_name='url', **NULLABLE)
+    price = models.PositiveIntegerField(verbose_name='price', null=True)
 
     def __str__(self):
         return self.title

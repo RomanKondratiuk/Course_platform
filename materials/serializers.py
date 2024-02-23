@@ -29,6 +29,8 @@ class CourseSerializer(serializers.ModelSerializer):
     # validation for material reference
     url = serializers.URLField(validators=[validator_scam_url], read_only=True)
 
+    link_of_payment = serializers.URLField()
+
     class Meta:
         model = Course
         fields = '__all__'
