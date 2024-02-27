@@ -36,7 +36,7 @@ def get_session(instance):
     stripe.api_key = API_KEY
 
     product = stripe.Product.create(
-        name=f'{Course.title}'
+        name=f'{instance.name}'
     )
 
     price = stripe.Price.create(

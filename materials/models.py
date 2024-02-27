@@ -62,7 +62,8 @@ class CourseSubscription(models.Model):
 
 
 class CoursePayment(models.Model):
-    price_amount = models.CharField(verbose_name='payment_price')
+    name = models.ForeignKey(Course, on_delete=CASCADE, verbose_name='name_of_product', default=4, **NULLABLE)
+    price_amount = models.CharField(verbose_name='payment_price', **NULLABLE)
     payment_link = models.URLField(max_length=400, verbose_name='link_to_payment', **NULLABLE)
     payment_id = models.CharField(max_length=255, verbose_name='id_of_payment', **NULLABLE)
 
