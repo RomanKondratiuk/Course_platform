@@ -60,3 +60,15 @@ class CourseSubscription(models.Model):
     user = models.ForeignKey('users.User', on_delete=CASCADE)
     # valid_subscription = models.BooleanField(default=False)
 
+
+class CoursePayment(models.Model):
+    price_amount = models.CharField(verbose_name='payment_price')
+    payment_link = models.URLField(max_length=400, verbose_name='link_to_payment', **NULLABLE)
+    payment_id = models.CharField(max_length=255, verbose_name='id_of_payment', **NULLABLE)
+
+    class Meta:
+        verbose_name = 'course payment'
+        verbose_name_plural = 'course payments'
+
+    def __str__(self):
+        return self.payment_id

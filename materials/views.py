@@ -8,7 +8,9 @@ from rest_framework.views import APIView
 from materials.models import Course, Lesson, CourseSubscription
 from materials.paginators import LessonPaginator, CoursePaginator
 from materials.permissions import IsOwner, IsModerator
-from materials.serializers import CourseSerializer, LessonSerializer, CourseSubscriptionSerializer
+from materials.serializers import CourseSerializer, LessonSerializer, CourseSubscriptionSerializer, \
+    CoursePaymentSerializer
+from materials.services import get_session
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -112,3 +114,18 @@ class CourseSubscriptionAPIView(APIView):
         else:
             # Return an error message if the user is not authenticated
             return Response({"message": "Authentication required"}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+class CoursePaymentApiView(generics.CreateAPIView):
+    """ purchase of product """
+    serializer_class = CoursePaymentSerializer
+    permission_classes = [AllowAny]
+
+    def perform_create(self, serializer):
+        paid_of_course = serializer.save()
+        payment_link = get_session(paid_of_course)
+        paid_of_course.payment_link = payment_link
+        paid_of_course.save()
+
+    
+

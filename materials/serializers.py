@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from materials.models import Course, Lesson, CourseSubscription
+from materials.models import Course, Lesson, CourseSubscription, CoursePayment
 from materials.validators import validator_scam_url
 
 
@@ -29,8 +29,6 @@ class CourseSerializer(serializers.ModelSerializer):
     # validation for material reference
     url = serializers.URLField(validators=[validator_scam_url], read_only=True)
 
-    link_of_payment = serializers.URLField()
-
     class Meta:
         model = Course
         fields = '__all__'
@@ -52,4 +50,12 @@ class CourseSerializer(serializers.ModelSerializer):
 class CourseSubscriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = CourseSubscription
+        fields = '__all__'
+
+
+class CoursePaymentSerializer(serializers.ModelSerializer):
+    """ Course Payment Serializer"""
+
+    class Meta:
+        model = CoursePayment
         fields = '__all__'
