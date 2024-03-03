@@ -149,7 +149,12 @@ REST_FRAMEWORK = {
     ]
 }
 
-CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
 
 # Настройки для Celery
 CELERY_BEAT_SCHEDULE = {
@@ -158,3 +163,12 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': timedelta(minutes=10),
     },
 }
+
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+# EMAIL_HOST_PASSWORD = "HBtLuUHivhNerWdcU1cc"
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+

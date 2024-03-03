@@ -20,6 +20,10 @@ class Course(models.Model):
     def __str__(self):
         return self.title
 
+    def get_subscribed_users(self):
+        return [subscription.user for subscription in self.subscriptions.all() if subscription.user is not None]
+
+
     class Meta:
         verbose_name = 'course'
         verbose_name_plural = 'courses'
@@ -56,7 +60,7 @@ def set_lesson_owner(sender, instance, created, **kwargs):
 class CourseSubscription(models.Model):
     """Subscription_to_the_course"""
 
-    course = models.ForeignKey(Course, on_delete=CASCADE)
+    course = models.ForeignKey(Course, on_delete=CASCADE, related_name='subscriptions')
     user = models.ForeignKey('users.User', on_delete=CASCADE, null=True)
     # valid_subscription = models.BooleanField(default=False)
 
