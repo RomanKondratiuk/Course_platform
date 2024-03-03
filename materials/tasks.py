@@ -1,7 +1,5 @@
 from celery import shared_task
 from django.core.mail import send_mail
-import logging
-# from django.core.management import settings
 from django.conf import settings
 
 
