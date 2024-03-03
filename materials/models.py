@@ -13,7 +13,7 @@ class Course(models.Model):
     title = models.CharField(max_length=100, verbose_name='title')
     preview = models.ImageField(upload_to='course_previews/', verbose_name='preview', **NULLABLE)
     description = models.TextField(verbose_name='description')
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, **NULLABLE, verbose_name='owner')
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, verbose_name='owner', **NULLABLE)
     url = models.URLField(verbose_name='url', **NULLABLE)
     price = models.PositiveIntegerField(verbose_name='price', null=True)
 
@@ -31,8 +31,8 @@ class Lesson(models.Model):
     preview = models.ImageField(upload_to='lesson_previews/', verbose_name='preview', **NULLABLE)
     description = models.TextField(verbose_name='description')
     url = models.URLField(verbose_name='url', **NULLABLE)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='lessons')
-    owner = models.ForeignKey('users.User', on_delete=CASCADE, related_name='lessons', default=None, **NULLABLE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='lessons', null=True)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='lessons', **NULLABLE)
 
     def __str__(self):
         return self.title
@@ -57,7 +57,7 @@ class CourseSubscription(models.Model):
     """Subscription_to_the_course"""
 
     course = models.ForeignKey(Course, on_delete=CASCADE)
-    user = models.ForeignKey('users.User', on_delete=CASCADE)
+    user = models.ForeignKey('users.User', on_delete=CASCADE, null=True)
     # valid_subscription = models.BooleanField(default=False)
 
 
