@@ -5,6 +5,9 @@ from django.conf import settings
 
 @shared_task
 def send_mail_about_updates(recipient_email, course_title):
+    """in this script, an email is sent when the course
+     is updated to those users who are subscribed to it
+     """
     send_mail(
         subject='course update notification',
         message=f"the course {course_title} has been updated. Check out the new materials!",

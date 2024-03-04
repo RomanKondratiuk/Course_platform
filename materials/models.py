@@ -23,7 +23,6 @@ class Course(models.Model):
     def get_subscribed_users(self):
         return [subscription.user for subscription in self.subscriptions.all() if subscription.user is not None]
 
-
     class Meta:
         verbose_name = 'course'
         verbose_name_plural = 'courses'

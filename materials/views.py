@@ -17,8 +17,8 @@ class CourseViewSet(viewsets.ModelViewSet):
     """ Description of ViewSet for working with the course model """
     serializer_class = CourseSerializer
     queryset = Course.objects.all()
-    # permission_classes = [IsAuthenticated, IsOwner | IsModerator]
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated, IsOwner | IsModerator]
+    # permission_classes = [AllowAny]
     pagination_class = CoursePaginator
 
     def create(self, request, *args, **kwargs):
@@ -35,16 +35,14 @@ class CourseViewSet(viewsets.ModelViewSet):
             return self.permission_denied(request)
         return super().destroy(request, *args, **kwargs)
 
-
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
 
         subscribed_users = instance.get_subscribed_users()
-        user_email = 'roma.kondratiuk@icloud.com'
-        # Отправляем уведомление каждому пользователю
+
         for user in subscribed_users:
             if user.email:
-                send_mail_about_updates.delay(user_email, instance.title)
+                send_mail_about_updates.delay(user.email, instance.title)
 
         return super().update(request, *args, **kwargs)
 
@@ -52,8 +50,8 @@ class CourseViewSet(viewsets.ModelViewSet):
 class LessonCreateApiView(generics.CreateAPIView):
     """ Creating a lesson """
     serializer_class = LessonSerializer
-    # permission_classes = [IsAuthenticated, IsOwner]
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated, IsOwner]
+    # permission_classes = [AllowAny]
 
 
 class LessonListApiView(generics.ListAPIView):
@@ -88,6 +86,7 @@ class CourseSubscriptionAPIView(APIView):
     """Creating a subscription to course updates"""
 
     permission_classes = [IsAuthenticated, IsOwner]
+
     # permission_classes = [AllowAny]
 
     def get(self, request):
@@ -142,6 +141,3 @@ class CoursePaymentApiView(generics.CreateAPIView):
         payment_link = get_session(paid_of_course)
         paid_of_course.payment_link = payment_link
         paid_of_course.save()
-
-    
-
