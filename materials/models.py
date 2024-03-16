@@ -5,7 +5,7 @@ from django.dispatch import receiver
 
 from config import settings
 
-NULLABLE = {'blank': True, 'null': True}
+NULLABLE = {'null': True, 'blank': True}
 
 
 class Course(models.Model):
