@@ -20,5 +20,5 @@ services:
       - db
 
 
-volumes:у
+volumes:
   pg_data:
