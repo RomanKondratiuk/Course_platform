@@ -2,14 +2,14 @@ version: '3'
 
 services:
   db:
-    image: postgres:15.3
+    image: postgres
     environment:
-      POSTGRES_PASSWORD: mysecretpassword
-      PGDATA: /var/lib/postgresql/data/pgdata
+      - POSTGRES_PASSWORD=mysecretpassword
+      - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
       - pg_data:/var/lib/postgresql/data/pgdata
     ports:
-      - '5432:5432'
+      - '5434:5432'
 
   app:
     build: .
