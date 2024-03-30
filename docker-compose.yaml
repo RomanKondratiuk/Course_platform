@@ -1,6 +1,12 @@
 version: '3.8'
 
 services:
+
+  redis:
+    image: redis
+    ports:
+      - '6379:6379'
+
   db:
     image: postgres
     restart: unless-stopped
@@ -23,6 +29,7 @@ services:
 
   app:
     build: .
+    tty: true
     restart: unless-stopped
     command: >
       bash -c "while !</dev/tcp/db/5432; do sleep 1; done;
