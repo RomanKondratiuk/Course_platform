@@ -6,6 +6,8 @@ services:
     image: redis
     ports:
       - '6379:6379'
+    networks:
+      - myNet
 
   db:
     image: postgres
@@ -32,14 +34,24 @@ services:
     tty: true
     restart: unless-stopped
     command: >
-      bash -c "while !</dev/tcp/db/5432; do sleep 1; done;
-               python manage.py migrate &&
-               python manage.py runserver 0.0.0.0:8000"
+      /bin/bash -c "./wait-for-it.sh db:5432 --timeout=30 -- 
+                   python manage.py migrate &&
+                   python manage.py runserver 0.0.0.0:8000"
+
+  celery:
+    build: .
+    tty: true
+    command: celery -A config worker -l INFO
+    depends_on:
+      - redis
+      - app
+
+
     volumes:
       - .:/code
-    depends_on:
-      db:
-        condition: service_healthy
+#    depends_on:
+#      db:
+#        condition: service_healthy
     ports:
       - '8001:8000'
     networks:
