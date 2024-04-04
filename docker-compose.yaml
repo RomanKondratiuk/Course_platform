@@ -33,10 +33,11 @@ services:
     build: .
     tty: true
     restart: unless-stopped
-    command: python manage.py migrate &&
-             python manage.py runserver 0.0.0.0:8000
+    command: python manage.py runserver 0.0.0.0:8000
     depends_on:
       - db
+    networks:
+      - myNet
 
   celery:
     build: .
@@ -46,6 +47,8 @@ services:
       - db
       - redis
       - app
+
+
 
 
     volumes:
