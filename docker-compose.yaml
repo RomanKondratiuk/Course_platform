@@ -6,12 +6,12 @@ services:
     image: redis
     ports:
       - '6379:6379'
-    networks:
-      - myNet
+#    networks:
+#      - myNet
 
   db:
     image: postgres
-    restart: unless-stopped
+#    restart: unless-stopped
     environment:
       POSTGRES_DB: ${DATABASE_NAME}
       POSTGRES_USER: ${DATABASE_USER}
@@ -22,48 +22,50 @@ services:
     ports:
       - '5435:5432'
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - myNet
+#    networks:
+#      - myNet
 
   app:
     build: .
     tty: true
     restart: unless-stopped
     command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - '8000:8000'
+    volumes:
+      - .:/code
     depends_on:
-      - db
-    networks:
-      - myNet
+      db:
+        condition: service_healthy
+#    networks:
+#      - myNet
 
   celery:
     build: .
     tty: true
     command: celery -A config worker -l INFO
     depends_on:
-      - db
+#      - db
+      - redis
+      - app
+
+  celery_beat:
+    build: .
+    tty: true
+    command: celery -A config beat -l INFO -S django
+    depends_on:
+#      - db
       - redis
       - app
 
 
-
-
-    volumes:
-      - .:/code
-#    depends_on:
-#      db:
-#        condition: service_healthy
-    ports:
-      - '8001:8000'
-    networks:
-      - myNet
-
-networks:
-  myNet:
-    driver: bridge
+#networks:
+#  myNet:
+#    driver: bridge
 
 volumes:
   pg_data:
